@@ -103,7 +103,7 @@ public class TreeProblems {
    then the method should return 32.
    A null tree should return 0
   */
-  public static int sumTree(Node<Integer> root) {
+  public static int sumTree(Node<Integer> root) { //FIX
     if(root == null)
     {
       return 0;
@@ -177,6 +177,25 @@ public class TreeProblems {
    Hint: No recursion needed! Think about how you would do this by hand.
   */
   public static <T> T findRoot(Map<T, List<T>> tree) {
+    //if the value with any given key corresponds to a key value then it is a child 
+    //else if no value matches a key then it is the root of the tree
+
+
+    for(T key : tree.keySet())
+    {
+      if(tree.get(key).isEmpty())
+      {
+        continue;
+      }
+      List<T> vals = tree.get(key); 
+      
+      if(vals.contains(key))
+      {
+        break
+      }
+    
+    }
+
     return null;
   }
 
