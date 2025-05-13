@@ -1,5 +1,3 @@
-import java.util.List;
-import java.util.Map;
 import java.util.*;
 
 public class TreeProblems {
@@ -103,23 +101,18 @@ public class TreeProblems {
    then the method should return 32.
    A null tree should return 0
   */
-  public static int sumTree(Node<Integer> root) { //FIX
+  public static int sumTree(Node<Integer> root) {
     if(root == null)
     {
       return 0;
     }
 
-    else
+    int sum = root.value;
+    for(Node<Integer> child : root.children) 
     {
-      if(root.children != null) //FIX
-      {
-        for(Node<Integer> child : root.children)
-        {
-          return child.value + root.value + sumTree(child);
-        }
-      }      
-      return root.value;
-    }    
+      sum += sumTree(child);
+    }
+    return sum;   
   }
 
   /*
@@ -180,20 +173,19 @@ public class TreeProblems {
     //if the value with any given key corresponds to a key value then it is a child 
     //else if no value matches a key then it is the root of the tree
 
-
-    for(T key : tree.keySet())
-    {
-      if(tree.get(key).isEmpty())
-      {
-        continue;
-      }
-      List<T> vals = tree.get(key); 
-      
-      if(vals.contains(key))
-      {
-        break
-      }
+    Set<T> allChildren = new HashSet<>();
     
+    for(List<T> children : tree.values()) 
+    {
+      allChildren.addAll(children);
+    }
+
+    for(T node : tree.keySet()) 
+    {
+      if(!allChildren.contains(node)) 
+      {
+        return node;
+      }
     }
 
     return null;
@@ -218,7 +210,18 @@ public class TreeProblems {
    
   */
   public static <T> int maxDepth(Node<T> root) {
-    return -1;
+    if(root == null) 
+    {
+      return 0;
+    }
+
+    int maxChildDepth = 0;
+    for(Node<T> child : root.children) 
+    {
+      maxChildDepth = Math.max(maxChildDepth, maxDepth(child));
+    }
+
+    return 1 + maxChildDepth; // add 1 for current root
   }
 
   /*
@@ -240,6 +243,30 @@ public class TreeProblems {
    Hint: Use findRoot to start. Then, make a recursive helper method.
   */
   public static int maxDepth(Map<String, List<String>> tree) {
-    return -1;
+    if(tree == null || tree.isEmpty()) 
+    {
+      return 0;
+    }
+
+    String root = findRoot(tree);
+    return findDepth(root, tree);
+  }
+
+  private static int findDepth(String node, Map<String, List<String>> tree) 
+  {
+      List<String> children = tree.getOrDefault(node, new ArrayList<>());
+
+      if(children.isEmpty()) 
+      {
+        return 1; // Leaf node
+      }
+
+      int maxChildDepth = 0;
+      for(String child : children) 
+      {
+        maxChildDepth = Math.max(maxChildDepth, findDepth(child, tree));
+      }
+
+      return 1 + maxChildDepth; // Add 1 for the current node
   }
 }
